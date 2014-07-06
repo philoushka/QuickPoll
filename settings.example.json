@@ -1,0 +1,15 @@
+{
+    "facebook": {
+        "applicationId": "example",
+        "applicationSecret": "test"
+    },
+    "twitter": {
+        "consumerKey": "{ your twitter consumer key }",
+        "consumerSecret": "{ your twitter consumer secret }"
+    },
+    "recaptcha": {
+        "publicKey": "{ your recaptcha public key }",
+        "privateKey": "{ your recaptcha private key }"
+    }
+
+}

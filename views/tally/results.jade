@@ -1,0 +1,17 @@
+extends ../layout
+
+block content
+
+    section(class="featured")
+      div(class="content-wrapper")
+          hgroup(class="title")
+            h1=name      
+          p=question
+
+    section(class="main-content")    
+        p=question
+          
+        h3=answers.length + " answers" 
+        each answer in answers
+            div=answer.choice
+    

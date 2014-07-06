@@ -1,0 +1,28 @@
+doctype 5
+html
+  head    
+    title Tally Up - Make Quick Polls To Share For Quick Answers         
+    link(rel='stylesheet', href='/stylesheets/cosmo.bootstrap.min.css')      
+    link(rel='stylesheet', href='/stylesheets/tally.css')
+    script(src='/scripts/jquery-1.8.3.min.js')
+    script(src='/scripts/modernizr.js')
+   
+  block head
+  body    
+   div(class="navbar navbar-default")
+        div(class="navbar-header")
+            a(class="navbar-brand",href="") Tally Up        
+        div(class="navbar-collapse collapse navbar-responsive-collapse")
+            ul(class="nav navbar-nav navbar-right")               
+                li 
+                    a(href="/tally/new") New Tally
+                li 
+                    a(href="/about") About
+    
+   div(class="panel panel-default")
+        div(class="panel-body")
+            block content  
+        div(class="panel-footer")
+          p &copy; !{(new Date()).getFullYear()} Phil Campbell        
+            a(href="http://twitter.com/philoushka", class="twitter") 
+                img(src="/images/twitter.png")

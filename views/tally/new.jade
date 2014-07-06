@@ -1,0 +1,32 @@
+extends ../layout
+
+block head
+    script(src="/scripts/new.js")
+block content   
+    h2 Fill this out to get a poll started.        
+    div(class="well bs-component")  
+        form(method="post", action="/tally/new", class="form-horizontal", id="formNew")
+            fieldset                
+
+                div.form-group
+                   label(for="pollOwnerName",class="col-lg-2 control-label") Who Are You?
+                   div.col-lg-10
+                        input(type="text",class="form-control",placeholder="Your Name", id="pollOwnerName", name="pollOwnerName" )                        
+                div.form-group
+                   label(for="pollQuestion",class="col-lg-2 control-label") Poll Question:
+                   div.col-lg-10
+                        input(type="text",class="form-control",placeholder="What's your question?", id="pollQuestion", name="pollQuestion" )
+                div.form-group   
+                   label(for="pollDesc",class="col-lg-2 control-label") Brief Description:
+                   div.col-lg-10
+                        textarea(id="pollDesc",name="pollDesc",class="form-control", placeholder="Add more details if you like")
+                div.form-group   
+                   label(for="numFreeTextChoices",class="col-lg-2 control-label") Num Choices To Give:
+                   div.col-lg-10
+                        select(id="numFreeTextChoices", name="numFreeTextChoices",class="form-control")
+                            -for (var i = 1; i < 10; ++i) {
+                                 option= i
+                            - }
+                div.form-group
+                 div(class="col-lg-10 col-lg-offset-2")
+                   button(type="submit",class="btn btn-primary") Make It
