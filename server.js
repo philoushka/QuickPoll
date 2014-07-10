@@ -34,7 +34,6 @@ app.use(bodyParser.json() );       // to support JSON-encoded bodies
 app.use(express.json()); 
 
 //ROUTING
-
 require('./routes/home')(app);
 require('./routes/tally')(app);
 

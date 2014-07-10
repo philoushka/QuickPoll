@@ -1,0 +1,30 @@
+extends ../layout
+block head
+    script(src="/scripts/all.js")
+block content 
+
+  table(class="table table-striped table-hover")
+    thead
+        tr
+            th id
+            th Question
+            th Owner
+            th Num Answers
+            th Edit/Delete
+    
+    each tally in tallies
+        tr
+            td
+             a(href="/tally/results/" + tally.id)= tally.id
+            td
+                =tally.question
+                p
+                    small=tally.desc
+            td  
+                a(href="/tally/owner/"+tally.ownerNameEncoded)= tally.ownerName
+            td=tally.numResponses     
+            td(class="tallyActionImgs")
+                a(href="/tally/edit/" + tally.id)
+                    i(class="fa fa-pencil-square-o fa-2x")
+                a(href="/tally/delete/" + tally.id)
+                    i(class="fa fa-trash-o fa-2x")

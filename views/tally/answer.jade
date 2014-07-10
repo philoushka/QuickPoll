@@ -10,22 +10,21 @@ block content
         form(id="formAnswer",method="post", class="form-horizontal", action="/tally/addAnswer/" + id)
             fieldset                                
                 div.form-group
-                    label(for="responderWho",class="col-lg-2 control-label") Who Are You?
+                    label(for="responderName",class="col-lg-2 control-label") Who Are You?
                     div.col-lg-10
-                        input(type="text",class="form-control",placeholder='name, email, whatever?', id="responderWho", name="responderWho" )
+                        input(type="text",class="form-control",placeholder='name, email, whatever?', id="responderName", name="responderName" )
                                                             
                 -for (var i = 1; i <= numFreeTextAnswersAllowed; i++) {
-                -var pollAnswerId = "pollAnswer" + i;
+                
                     div.form-group
-                        label(class="col-lg-2 control-label", for="pollAnswer" + i) Answer #{i}:
+                        label(class="col-lg-2 control-label", for="pollAnswer[" + i + "]") Answer #{i}:
                         div.col-lg-10
-                            input(type="text", class="form-control", id="pollAnswer" + i, name="pollAnswer" + i )
+                            input(type="text", class="form-control", id="pollAnswer[" + i+ "]", name="pollAnswer[" + i + "]")
                  - }
                 div.form-group
                     div(class="col-lg-10 col-lg-offset-2")
                         button(type="submit", class="btn btn-primary") Answer It
                         div(class="alert alert-dismissable alert-danger" ,id="errWarnBox",style="display: none")
-                             Answer these in red and try submitting again.
-            a(href="") Share This Poll
+                             Answer these in red and try submitting again.           
     include tweetbutton.htm        
  
