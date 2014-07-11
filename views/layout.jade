@@ -9,23 +9,24 @@ html
     script(src='/scripts/modernizr.js')
    
   block head
-  body    
-   div(class="navbar navbar-default")
-        div(class="navbar-header")
-            a(class="navbar-brand",href="/") Tally Up        
-        div(class="navbar-collapse collapse navbar-responsive-collapse")
-            ul(class="nav navbar-nav navbar-right")               
-                li 
-                    a(href="/tally/new") New Tally
-                li 
-                    a(href="/about") About
-                li 
-                    a(href="/tally/all") All
-    
-   div(class="panel panel-default")
-        div(class="panel-body",style="width:1000px;")
-            block content  
-        div(class="panel-footer")
-          p &copy; !{(new Date()).getFullYear()} Phil Campbell        
-            a(href="http://twitter.com/philoushka", class="twitter") 
-                i(class="fa fa-twitter fa-2x")
+  body
+    div(class="container")    
+       div(class="navbar navbar-default")
+            div(class="navbar-header")
+                a(class="navbar-brand",href="/") Tally Up        
+            div(class="navbar-collapse collapse navbar-responsive-collapse")
+                ul(class="nav navbar-nav navbar-right")               
+                    li 
+                        a(href="/tally/new") New Tally
+                    li 
+                        a(href="/about") About
+                    li 
+                        a(href="/tally/all") All
+        
+       div(class="panel panel-default")
+            div(class="panel-body" )
+                block content  
+            div(class="panel-footer")
+              p &copy; !{(new Date()).getFullYear()} Phil Campbell        
+                a(href="http://twitter.com/philoushka", class="twitter") 
+                    i(class="fa fa-twitter fa-2x")

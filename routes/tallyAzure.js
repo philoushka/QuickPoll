@@ -29,33 +29,40 @@ exports.SaveTally = function(tally, callback) {
     });
 }
 
-exports.AppendAnswerToTally=function (tallyId, userResponse, callback)
-{
+exports.AppendAnswerToTally = function(tallyId, userResponse, callback) {
     var blobSvc = GetAzureBlobService();
     //get tally by id
-    
+
     //attach this user response.
-    
+
     //save it back to Azure
     callback();
 }
 
-exports.ExtractBlobListToTallies = function(allBlobs, callback) {
-    var tallies = [];
-
-    allBlobs.forEach(function(entry) {
-        var tallyId = azure.GetIDFromFileName(entry.name);
-        azure.GetTally(tallyId, function(tally) {
-            tallies.push(tally);
+ exports.read_azure_list = function(next) {
+    var blobSvc = GetAzureBlobService();
+    blobSvc.listBlobsSegmented('tally', null, function(error, result, response) {
+        var tallyCount = result.entries.length;
+        var tallies = [];
+        result.entries.forEach(function(tallyListEntry) {
+            var tallyId = fileNames.GetIDFromFileName(tallyListEntry.name);
+            exports.GetTally(tallyId, function(tally) {
+                if(tally)
+                {
+                     tally.numResponses =0;
+                    if(tally.responses)
+                    {
+                        tally.numResponses = tally.responses.length;
+                    }
+              
+                    tallies.push(tally);
+                }
+                tallyCount--;
+                if (tallyCount <= 0) {
+                    next(tallies);
+                }
+            });
         });
     });
-    callback(tallies);
 }
 
-exports.GetAllTallies = function(callback) {
-
-    var blobSvc = azure.GetAzureBlobService();
-    blobSvc.listBlobsSegmented('tally', null, function(error, result, response) {
-        callback(result.entries);
-    });
-}

@@ -28,8 +28,6 @@ module.exports = function(app) {
             res.render('tally/answer', tally);
         });
     });
-
-
     
     app.post('/tally/addAnswer/:tallyId', function(req, res) {
         req.body.pollAnswer
@@ -43,8 +41,7 @@ module.exports = function(app) {
         azure.AppendAnswerToTally(tallyId, userResponse, function(){
             
         res.redirect("tally/results/" + tallyId);    
-        });
-        
+        });       
     });
 
     //*************** RESULTS 
@@ -57,45 +54,12 @@ module.exports = function(app) {
         });
     });
 
-    //*************** ALL 
-    app.get('/tally/all', function(req, res) {
-        //azure.GetAllTallies(function(tallies) {
-        var listTallies = [
-            {
-            id : "edk8437823" ,
-            question : "Wait a minute - you've been declared dead. You can't give orders around here. Captain, why are we out here chasing comets? And blowing into maximum warp speed, you appeared for an instant to be in two places at once.?",
-            ownerName : "philoushka",
-            ownerNameEncoded: encodeURIComponent("philoushka"),
-            desc : "level readymade. Post-ironic typewriter whatever, readymade literally Intelligentsia DIY Blue Bottle 8-bit seitan wolf bicycle rights. Wes Anderson Banksy Intelligentsia",
-            numFreeTextAnswersAllowed : 23,
-            numResponses : 2},
-            {
-            id : "32s847823" ,
-            question : "Nullam feugiat, turpis at pulvinar vulputate, erat libero tristique tellus?",
-            ownerName : "VHS XOXO Tonx",
-            ownerNameEncoded: encodeURIComponent("VHS XOXO Tonx"),
-            desc : "Wait a minute - you've been declared dead. You can't give orders around here. Captain, why are we out here chasing comets? And blowing into maximum warp speed, you appeared for an instant to be in two places at once. and attack the Romulans. You did exactly what you had to doYou considered all your options, you tried every alternative and then you made the hard choice.",
-            numFreeTextAnswersAllowed : 2,
-            numResponses : 0},
-            {
-            id : "d23847823" ,
-            question : "Nullam feugiat, turpis at pulvinar vulputate, erat libero tristique tellus?",
-            ownerName : "Echo Park",
-            ownerNameEncoded: encodeURIComponent("Echo Park"),
-            desc : "Wait a minute - you've been declared dead. You can't give orders around here. Captain, why are we out here chasing comets? And blowing into maximum warp speed, you appeared for an instant to be in two places at once.",
-            numFreeTextAnswersAllowed : 3,
-            numResponses : 5},
-            {
-            id : "1284783223" ,
-            question : "Pitchfork cornhole next level stumptown?",
-            ownerName : "meggings",
-            ownerNameEncoded: encodeURIComponent("meggings"),
-            desc : "Wolf salvia Vice, ennui Truffaut flexitarian chambray",
-            numFreeTextAnswersAllowed : 2,
-            numResponses : 7},
-            
-        ];
-            res.render('tally/all', {tallies:listTallies});
-        //});
-    });
-}
+     //*************** ALL
+     app.get('/tally/all', function(req, res) {    
+    	azure.read_azure_list( function(allTallies){
+          // res.send(JSON.stringify(allTallies));                  
+          res.render('tally/all', {tallies:allTallies});                   
+        });
+     }); 
+}    
+     
