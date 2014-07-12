@@ -4,8 +4,9 @@ block head
 block content 
     p=ownerName + " asks:"
     h2
-        a(href="")=question         
+        a(href="")=question             
     div.pollDesc=desc
+    div.pollDesc=createdDateString
     div(class="well bs-component")      
         form(id="formAnswer",method="post", class="form-horizontal", action="/tally/addAnswer/" + id)
             fieldset                                

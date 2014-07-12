@@ -20,11 +20,13 @@ block content
                 =tally.question
                 p
                     small=tally.desc
+                p 
+                    small=tally.createdDateString                   
             td  
                 a(href="/tally/owner/"+tally.ownerNameEncoded)= tally.ownerName
             td=tally.numResponses     
             td(class="tallyActionImgs")
                 a(href="/tally/edit/" + tally.id)
                     i(class="fa fa-pencil-square-o fa-2x")
-                a(href="/tally/delete/" + tally.id)
+                a(href="/tally/delete/" + tally.id + "/" + tally.deleteToken)
                     i(class="fa fa-trash-o fa-2x")

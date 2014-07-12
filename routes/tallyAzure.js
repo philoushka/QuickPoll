@@ -12,6 +12,13 @@ exports.GetTally = function(id, callback) {
     });
 }
 
+exports.DeleteTally = function(id, callback) {
+    var blobSvc = GetAzureBlobService();
+    blobSvc.deleteBlob('tally', fileNames.MakeFileName(id), function(deleteErr, response) {        
+        callback();
+    });
+}
+
 exports.SaveTally = function(tally, callback) {
     var blobSvc = GetAzureBlobService();
     blobSvc.createContainerIfNotExists('tally', function(error, result, response) {

@@ -5,6 +5,10 @@ block content
     h2
         a(href="")=tally.question               
         div(class="well bs-component")          
-            fieldset                
-                each answer in tally.answers
-                  
+            fieldset      
+                if(tally.answers) {                          
+                    each answer in tally.answers
+                        p Hi, answer here ready to be written out.
+                } else 
+                p No Answers Yet.
+                
