@@ -16,9 +16,7 @@ function compare(a, b) {
 }
 
 
-
-
-function SetUpTalliesForDisplay(tallies, callback) {
+function setUpTalliesForDisplay(tallies, callback) {
 
     tallies = tallies.sort(compare);
     tallies.forEach(function(tally) {
@@ -30,30 +28,32 @@ function SetUpTalliesForDisplay(tallies, callback) {
     callback(tallies);
 }
 
+
+
 module.exports = function(app) {
 
     //*************** NEW 
     app.post('/tally/new', function(req, res) {
         var tally = {
-            id: crypto.CreateNewID(),
+            id: crypto.createNewID(),
             desc: req.body.pollDesc,
             createdDateTimeMilliseconds: Date.now(),
             createdDateString: new Date().toLocaleDateString(),
             sendNotificationTo:req.body.notification,            
-            deleteToken: crypto.CreateNewID(20),
+            deleteToken: crypto.createNewID(20),
             ownerName: req.body.pollOwnerName,
             question: req.body.pollQuestion,            
             numFreeTextAnswersAllowed: req.body.numFreeTextChoices
         };
 
-        azure.SaveTally(tally, function(tallyId) {
+        azure.saveTally(tally, function(tallyId) {
             
             if(validation.isDecentlyFormedEmailAddress(tally.sendNotificationTo))
             {
               var htmlBody = "Your tally has been created. We'll send you notifications as you've requested when a new answer is submitted.<BR><BR>";
               htmlBody += "http://tallyup.azurewebsites.net/tally/answer/"+tally.id + "<BR><BR>";
               htmlBody += "You can unsubscribe here: <BR>"
-              htmlBody += "http://tallyup.azurewebsites.net/unsub/"+tally.ownerName;
+              htmlBody += "http://tallyup.azurewebsites.net/unsub/"+tally.id;
               
               notif.sendEmail(tally.sendNotificationTo, "New Tally Created: " + tally.question, htmlBody );
             }
@@ -71,7 +71,7 @@ module.exports = function(app) {
 
     //*************** ANSWER 
     app.get('/tally/answer/:tallyId', function(req, res) {
-        azure.GetTally(req.params["tallyId"], function(tally) {
+        azure.getTally(req.params["tallyId"], function(tally) {
             res.render('tally/answer', tally);
         });
     });
@@ -85,7 +85,7 @@ module.exports = function(app) {
         userResponse.responses.shift(); //the first will be null because of 1-based numbering
 
         var tallyId = req.params["tallyId"];
-        azure.AppendAnswerToTally(tallyId, userResponse, function() {
+        azure.appendAnswerToTally(tallyId, userResponse, function() {
 
             res.redirect("tally/results/" + tallyId);
         });
@@ -93,7 +93,7 @@ module.exports = function(app) {
 
     //*************** RESULTS 
     app.get('/tally/results/:tallyId', function(req, res) {
-        azure.GetTally(req.params["tallyId"], function(tally) {
+        azure.getTally(req.params["tallyId"], function(tally) {
             if (tally)
                 res.render('tally/results', { tally: tally });
             else
@@ -103,9 +103,9 @@ module.exports = function(app) {
 
     //*************** ALL
     app.get('/tally/all', function(req, res) {
-        azure.read_azure_list(function(allTallies) {
+        azure.getAllTallies(function(allTallies) {
             // res.send(JSON.stringify(allTallies));     
-            SetUpTalliesForDisplay(allTallies, function(tallies) {
+            setUpTalliesForDisplay(allTallies, function(tallies) {
                 res.render('tally/all', { tallies: allTallies });
             });
         });
@@ -115,9 +115,9 @@ module.exports = function(app) {
     app.get('/tally/delete/:tallyId/:deleteToken', function(req, res) {
         var tallyId = req.params["tallyId"];
         var delToken = req.params["deleteToken"];
-        azure.GetTally(tallyId, function(tally) {
+        azure.getTally(tallyId, function(tally) {
             if (/*tally.deleteToken == undefined ||*/ tally.deleteToken === delToken) {
-                azure.DeleteTally(tallyId, function() {
+                azure.deleteTally(tallyId, function() {
                     res.redirect('tally/all');
                 });
             }
@@ -126,7 +126,5 @@ module.exports = function(app) {
             }
         });
     });
-
-
 }
      

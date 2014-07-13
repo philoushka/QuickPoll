@@ -4,9 +4,11 @@ var sendGrid = require("sendgrid")("azure_e77131a7ea3544e075d830c04e601c45@azure
 
 exports.sendSms = function(sendToPhoneNumber, message) {
   if (!sendToPhoneNumber) {
-    sendToPhoneNumber = "+12508639632";
+    sendToPhoneNumber = "2508639632";
   }
 
+  sendToPhoneNumber = exports.tryPrefixNorthAmericaCountryCode(sendToPhoneNumber);
+  
   if(sendToPhoneNumber[0] !== "+")
   {
     sendToPhoneNumber = "+" + sendToPhoneNumber;    
@@ -40,4 +42,13 @@ exports.sendEmail = function(addrTo, subject, htmlBody) {
     if (err) { console.error(err); }
     console.log(json);
   });
+}
+
+exports.tryPrefixNorthAmericaCountryCode=function(input)
+{
+  if(input.length==10)
+  {
+    return input= "+1" + input;
+  }
+  
 }

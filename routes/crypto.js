@@ -1,7 +1,7 @@
  var crypto = require('crypto');
  
  //creates a hex string of a given length
- exports.CreateNewID = function(len) {
+ exports.createNewID = function(len) {
     
     if(!len)
     {
@@ -12,7 +12,7 @@
         .slice(0, len);   // return required number of characters
 }
 
-exports.CreateSha1= function(strings)
+exports.createSha1= function(strings)
 {
     return crypto.createHash("sha1").update(strings.join()).digest('hex');
     

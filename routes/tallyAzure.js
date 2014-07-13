@@ -1,30 +1,30 @@
 var azure = require('azure-storage');
 var fileNames = require('./fileNames.js');
 
-function GetAzureBlobService() {
+function getAzureBlobService() {
     return azure.createBlobService();
 }
 
-exports.GetTally = function(id, callback) {
-    var blobSvc = GetAzureBlobService();
-    blobSvc.getBlobToText('tally', fileNames.MakeFileName(id), function(downloadErr, blobTextResponse) {
+exports.getTally = function(id, callback) {
+    var blobSvc = getAzureBlobService();
+    blobSvc.getBlobToText('tally', fileNames.makeFileName(id), function(downloadErr, blobTextResponse) {
         callback(JSON.parse(blobTextResponse));
     });
 }
 
-exports.DeleteTally = function(id, callback) {
-    var blobSvc = GetAzureBlobService();
+exports.deleteTally = function(id, callback) {
+    var blobSvc = getAzureBlobService();
     blobSvc.deleteBlob('tally', fileNames.MakeFileName(id), function(deleteErr, response) {        
         callback();
     });
 }
 
-exports.SaveTally = function(tally, callback) {
-    var blobSvc = GetAzureBlobService();
+exports.saveTally = function(tally, callback) {
+    var blobSvc = getAzureBlobService();
     blobSvc.createContainerIfNotExists('tally', function(error, result, response) {
         if (!error) {
             var tallyJson = JSON.stringify(tally);
-            blobSvc.createBlockBlobFromText('tally', fileNames.MakeFileName(tally.id), tallyJson, function(error, result, response) {
+            blobSvc.createBlockBlobFromText('tally', fileNames.makeFileName(tally.id), tallyJson, function(error, result, response) {
                 if (error) {
                     console.log("*Error saving tally " + error.toString());
                 }
@@ -36,8 +36,8 @@ exports.SaveTally = function(tally, callback) {
     });
 }
 
-exports.AppendAnswerToTally = function(tallyId, userResponse, callback) {
-    var blobSvc = GetAzureBlobService();
+exports.appendAnswerToTally = function(tallyId, userResponse, callback) {
+    var blobSvc = getAzureBlobService();
     //get tally by id
 
     //attach this user response.
@@ -46,14 +46,14 @@ exports.AppendAnswerToTally = function(tallyId, userResponse, callback) {
     callback();
 }
 
- exports.read_azure_list = function(next) {
-    var blobSvc = GetAzureBlobService();
+ exports.getAllTallies = function(next) {
+    var blobSvc = getAzureBlobService();
     blobSvc.listBlobsSegmented('tally', null, function(error, result, response) {
         var tallyCount = result.entries.length;
         var tallies = [];
         result.entries.forEach(function(tallyListEntry) {
-            var tallyId = fileNames.GetIDFromFileName(tallyListEntry.name);
-            exports.GetTally(tallyId, function(tally) {
+            var tallyId = fileNames.getIDFromFileName(tallyListEntry.name);
+            exports.getTally(tallyId, function(tally) {
                 if(tally)
                 {
                      tally.numResponses =0;
