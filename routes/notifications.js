@@ -1,6 +1,6 @@
 
-var twilio = require('twilio')('AC0d84d4dcf0c969b452091a5cf241d8d5', "85155b0ac51f49cb0b63444aab5a1790");
-var sendGrid = require("sendgrid")("azure_e77131a7ea3544e075d830c04e601c45@azure.com", "zcW031zV0X9qmhh");
+var twilio = require('twilio')(process.env.TwilioAcctSid,process.env.TwilioToken);
+var sendGrid = require("sendgrid")(process.env.SendGridAcct, process.env.SendGridPwd);
 
 exports.sendSms = function(sendToPhoneNumber, message) {
   if (!sendToPhoneNumber) {
