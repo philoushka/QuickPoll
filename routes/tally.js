@@ -2,6 +2,8 @@ var azure = require('./tallyAzure.js');
 var fileNames = require('./fileNames.js');
 var crypto = require('./crypto.js');
 var querystring = require("querystring");
+var notif = require("./notifications.js");
+var validation = require("./validation.js");
 
 //sort the objects by their id properties.
 //todo change this to thei createdDateTimeMilliseconds
@@ -12,6 +14,9 @@ function compare(a, b) {
         return 1;
     return 0;
 }
+
+
+
 
 function SetUpTalliesForDisplay(tallies, callback) {
 
@@ -34,13 +39,28 @@ module.exports = function(app) {
             desc: req.body.pollDesc,
             createdDateTimeMilliseconds: Date.now(),
             createdDateString: new Date().toLocaleDateString(),
+            sendNotificationTo:req.body.notification,            
             deleteToken: crypto.CreateNewID(20),
             ownerName: req.body.pollOwnerName,
-            question: req.body.pollQuestion,
+            question: req.body.pollQuestion,            
             numFreeTextAnswersAllowed: req.body.numFreeTextChoices
         };
 
         azure.SaveTally(tally, function(tallyId) {
+            
+            if(validation.isDecentlyFormedEmailAddress(tally.sendNotificationTo))
+            {
+              var htmlBody = "Your tally has been created. We'll send you notifications as you've requested when a new answer is submitted.<BR><BR>";
+              htmlBody += "http://tallyup.azurewebsites.net/tally/answer/"+tally.id + "<BR><BR>";
+              htmlBody += "You can unsubscribe here: <BR>"
+              htmlBody += "http://tallyup.azurewebsites.net/unsub/"+tally.ownerName;
+              
+              notif.sendEmail(tally.sendNotificationTo, "New Tally Created: " + tally.question, htmlBody );
+            }
+            else if(validation.isDecentlyFormedSmsNumber(tally.sendNotificationTo))
+            {
+              notif.sendSms(tally.sendNotificationTo,"A new tally has been created.\nhttp://tallyup.azurewebsites.net/tally/answer/"+tally.id+"\n" + tally.question);
+            }
             res.redirect("/tally/answer/" + tallyId);
         });
     });

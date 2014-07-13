@@ -20,13 +20,26 @@ block content
                    label(for="pollDesc",class="col-lg-2 control-label") Brief Description:
                    div.col-lg-10
                         textarea(id="pollDesc",name="pollDesc",class="form-control", placeholder="Add more details if you like")
-                div.form-group   
-                   label(for="numFreeTextChoices",class="col-lg-2 control-label") Num Choices To Give:
+                
+                div.form-group
+                    label(for="choiceType",class="col-lg-2 control-label")  Answers: 
+                    div.col-lg-10
+                        div(class="choiceTypeLeft")
+                            
+                            select(id="numFreeTextChoices", name="numFreeTextChoices",class="form-control")
+                                -for (var i = 1; i < 10; ++i) {
+                                     option= i
+                                - }    
+                        div(class="choiceTypeRight")
+                  //-div.form-group   
+                   //-label(for="numFreeTextChoices",class="col-lg-2 control-label") Freetext Choices To Give:
+                  //-div.col-lg-10
+
+                div.form-group
+                   label(for="notification",class="col-lg-2 control-label") Notify Me:
                    div.col-lg-10
-                        select(id="numFreeTextChoices", name="numFreeTextChoices",class="form-control")
-                            -for (var i = 1; i < 10; ++i) {
-                                 option= i
-                            - }
+                        input(type="text",class="form-control",placeholder="Phone number for SMS or email address", id="notification", name="notification" )
+
                 div.form-group
                  div(class="col-lg-10 col-lg-offset-2")
                    button(type="submit",class="btn btn-primary") Make It
