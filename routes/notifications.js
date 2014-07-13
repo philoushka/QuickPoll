@@ -3,6 +3,8 @@ var twilio = require('twilio')(process.env.TwilioAcctSid,process.env.TwilioToken
 var sendGrid = require("sendgrid")(process.env.SendGridAcct, process.env.SendGridPwd);
 
 exports.sendSms = function(sendToPhoneNumber, message) {
+  
+   
   if (!sendToPhoneNumber) {
     return;
   }
@@ -16,10 +18,11 @@ exports.sendSms = function(sendToPhoneNumber, message) {
   if (!message) {
     message = "test from tallyup";
   }
+  
   twilio.messages.create({
     body: message,
     to: sendToPhoneNumber,
-    from: "+16474960447"
+    from: process.env.TwilioFromNumber
     //,        mediaUrl: "https://www.google.ca/logos/2014/worldcup14/closing/cta.png"
   }, function(err, message) {
       if (err)

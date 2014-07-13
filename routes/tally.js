@@ -28,7 +28,23 @@ function setUpTalliesForDisplay(tallies, callback) {
     callback(tallies);
 }
 
-
+function cleanNotification(input)
+{
+  if(!input)
+  {
+    return "";
+  }
+  if(validation.isDecentlyFormedSmsNumber(input))
+  {    
+    return input.replace(/\D/g,'');
+  }
+  else
+  {
+    return input.trim();
+  }
+  
+  
+}
 
 module.exports = function(app) {
 
@@ -39,12 +55,13 @@ module.exports = function(app) {
             desc: req.body.pollDesc,
             createdDateTimeMilliseconds: Date.now(),
             createdDateString: new Date().toLocaleDateString(),
-            sendNotificationTo:req.body.notification,            
+            sendNotificationTo:cleanNotification(req.body.notification),
             deleteToken: crypto.createNewID(20),
             ownerName: req.body.pollOwnerName,
             question: req.body.pollQuestion,            
             numFreeTextAnswersAllowed: req.body.numFreeTextChoices
         };
+         console.log('will send to ' + tally.sendNotificationTo);
 
         azure.saveTally(tally, function(tallyId) {
             
