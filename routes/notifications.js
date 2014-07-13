@@ -4,13 +4,12 @@ var sendGrid = require("sendgrid")("azure_e77131a7ea3544e075d830c04e601c45@azure
 
 exports.sendSms = function(sendToPhoneNumber, message) {
   if (!sendToPhoneNumber) {
-    sendToPhoneNumber = "2508639632";
+    return;
   }
 
   sendToPhoneNumber = exports.tryPrefixNorthAmericaCountryCode(sendToPhoneNumber);
   
-  if(sendToPhoneNumber[0] !== "+")
-  {
+  if(sendToPhoneNumber[0] !== "+"){
     sendToPhoneNumber = "+" + sendToPhoneNumber;    
   }
   
@@ -23,24 +22,21 @@ exports.sendSms = function(sendToPhoneNumber, message) {
     from: "+16474960447"
     //,        mediaUrl: "https://www.google.ca/logos/2014/worldcup14/closing/cta.png"
   }, function(err, message) {
-
       if (err)
-      { console.log("Problem sending: " + err.message); }
-
+      { console.log("Problem sending Sms via Twilio: " + err.message); }
     });
 }
 
 exports.sendEmail = function(addrTo, subject, htmlBody) {
   var mail = {
     to: addrTo,
-    from: "admin@tallyup.net",
+    from: "TallyUp@tallyup.net",
     subject: subject,
     html: htmlBody
   };
 
   sendGrid.send(mail, function(err, json) {
-    if (err) { console.error(err); }
-    console.log(json);
+    if (err) { console.error("Problem sending via SendGrid: " + err); }    
   });
 }
 
