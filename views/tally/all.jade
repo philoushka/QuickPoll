@@ -6,18 +6,20 @@ block content
   table(class="table table-striped table-hover")
     thead
         tr
-            th id
+            th 
             th Question
             th Owner
             th Num Answers
             th Edit/Delete
     
-    each tally in tallies
+    //-each tally in tallies
+    - for (var i = 1; i < tallies.length; ++i) { 
+    - tally=tallies[i];
         tr
             td
-             a(href="/tally/results/" + tally.id)= tally.id
+              p=i
             td
-                =tally.question
+                a(href="/tally/results/" + tally.id)= tally.question
                 p
                     small=tally.desc
                 p 
@@ -28,5 +30,7 @@ block content
             td(class="tallyActionImgs")
                 a(href="/tally/edit/" + tally.id)
                     i(class="fa fa-pencil-square-o fa-2x")
-                a(href="/tally/delete/" + tally.id + "/" + tally.deleteToken)
-                    i(class="fa fa-trash-o fa-2x")
+                form(method="post",action="delete/"+ tally.id + "/" + tally.deleteToken,class="cellActionImg")
+                  a(href="#",class="delTally")
+                    i(class="fa fa-trash-o fa-2x deleteTally")
+    - }

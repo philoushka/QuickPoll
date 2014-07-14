@@ -14,7 +14,7 @@ exports.getTally = function(id, callback) {
 
 exports.deleteTally = function(id, callback) {
     var blobSvc = getAzureBlobService();
-    blobSvc.deleteBlob('tally', fileNames.MakeFileName(id), function(deleteErr, response) {        
+    blobSvc.deleteBlob('tally', fileNames.makeFileName(id), function(deleteErr, response) {        
         callback();
     });
 }
