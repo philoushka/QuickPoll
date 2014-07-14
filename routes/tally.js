@@ -7,7 +7,6 @@ var validation = require("./validation.js");
 var moment = require("moment");
 
 //sort the objects by their id properties.
-//todo change this to thei createdDateTimeMilliseconds
 function compare(a, b) {
   if (a.createdDateTimeMilliseconds > b.createdDateTimeMilliseconds)
     return -1;
@@ -16,28 +15,19 @@ function compare(a, b) {
   return 0;
 }
 
-
 function setUpTalliesForDisplay(tallies, callback) {
 
   tallies = tallies.sort(compare);
   tallies.forEach(function(tally) {
-    if (tally.createdDateTimeMilliseconds)
-    {
-      tally.createdDateString = moment(tally.createdDateTimeMilliseconds).calendar();
-    }
+    ensureDateApplied(tally);
   });
   callback(tallies);
 }
 
-function cleanNotification(input) {
-  if (!input) {
-    return "";
-  }
-  if (validation.isDecentlyFormedSmsNumber(input)) {
-    return input.replace(/\D/g, '');
-  }
-  else {
-    return input.trim();
+function ensureDateApplied(tally) {
+  tally.createdDateString = "";
+  if (tally.createdDateTimeMilliseconds) {
+    tally.createdDateString = moment(tally.createdDateTimeMilliseconds).calendar();
   }
 }
 
@@ -48,28 +38,17 @@ module.exports = function(app) {
     var tally = {
       id: crypto.createNewID(),
       desc: req.body.pollDesc,
-      createdDateTimeMilliseconds: Date.now(),      
-      sendNotificationTo: cleanNotification(req.body.notification),
+      createdDateTimeMilliseconds: Date.now(),
+      sendNotificationTo: validation.cleanNotification(req.body.notification),
       deleteToken: crypto.createNewID(20),
       ownerName: req.body.pollOwnerName,
       question: req.body.pollQuestion,
       numFreeTextAnswersAllowed: req.body.numFreeTextChoices
     };
-    console.log('will send to ' + tally.sendNotificationTo);
 
     azure.saveTally(tally, function(tallyId) {
-
-      if (validation.isDecentlyFormedEmailAddress(tally.sendNotificationTo)) {
-        var htmlBody = "Your tally has been created. We'll send you notifications as you've requested when a new answer is submitted.<BR><BR>";
-        htmlBody += "http://tallyup.azurewebsites.net/tally/answer/" + tally.id + "<BR><BR>";
-        htmlBody += "You can unsubscribe here: <BR>"
-              htmlBody += "http://tallyup.azurewebsites.net/unsub/" + tally.id;
-
-        notif.sendEmail(tally.sendNotificationTo, "New Tally Created: " + tally.question, htmlBody);
-      }
-      else if (validation.isDecentlyFormedSmsNumber(tally.sendNotificationTo)) {
-        notif.sendSms(tally.sendNotificationTo, "A new tally has been created.\nhttp://tallyup.azurewebsites.net/tally/answer/" + tally.id + "\n" + tally.question);
-      }
+      notif.sendUserNotification(tally);
+      notif.sendAdminNotification(tally);
       res.redirect("/tally/answer/" + tallyId);
     });
   });
@@ -81,6 +60,7 @@ module.exports = function(app) {
   //*************** ANSWER 
   app.get('/tally/answer/:tallyId', function(req, res) {
     azure.getTally(req.params["tallyId"], function(tally) {
+      ensureDateApplied(tally);
       res.render('tally/answer', tally);
     });
   });
@@ -95,7 +75,6 @@ module.exports = function(app) {
 
     var tallyId = req.params["tallyId"];
     azure.appendAnswerToTally(tallyId, userResponse, function() {
-
       res.redirect("tally/results/" + tallyId);
     });
   });
@@ -114,6 +93,7 @@ module.exports = function(app) {
   app.get('/tally/all', function(req, res) {
     azure.getAllTallies(function(allTallies) {
       // res.send(JSON.stringify(allTallies));     
+      console.log("got " , allTallies.length);
       setUpTalliesForDisplay(allTallies, function(tallies) {
         res.render('tally/all', { tallies: allTallies });
       });
@@ -121,19 +101,20 @@ module.exports = function(app) {
   });
 
   //*************** DELETE 
-  app.post('/tally/delete/:tallyId/:deleteToken', function(req, res) {
+  app.delete('/tally/delete/:tallyId/:deleteToken', function(req, res) {
     var tallyId = req.params["tallyId"];
     var delToken = req.params["deleteToken"];
+
     azure.getTally(tallyId, function(tally) {
-      if (tally.deleteToken == undefined || tally.deleteToken === delToken) {
-        azure.deleteTally(tallyId, function() {
-          res.redirect('tally/all');
+      if (tally.deleteToken === delToken) {
+        azure.deleteTally(tallyId, function() {          
+          res.writeHead(200, { "Content-Type": "text/plain" });
+          res.end(JSON.stringify({ "deleteSuccess": true }));
         });
       }
-      else {
-        res.render('tally/404');
-      }
+    
     });
+
   });
 }
      

@@ -50,13 +50,17 @@ exports.appendAnswerToTally = function(tallyId, userResponse, callback) {
     var blobSvc = getAzureBlobService();
     blobSvc.listBlobsSegmented('tally', null, function(error, result, response) {
         var tallyCount = result.entries.length;
+        console.log("got tally count ", tallyCount);
         var tallies = [];
         result.entries.forEach(function(tallyListEntry) {
+          
             var tallyId = fileNames.getIDFromFileName(tallyListEntry.name);
             exports.getTally(tallyId, function(tally) {
+                
+               
                 if(tally)
                 {
-                     tally.numResponses =0;
+                    tally.numResponses =0;
                     if(tally.responses)
                     {
                         tally.numResponses = tally.responses.length;
@@ -64,6 +68,8 @@ exports.appendAnswerToTally = function(tallyId, userResponse, callback) {
               
                     tallies.push(tally);
                 }
+                else
+                {console.log("couldn't get ", tallyId);}
                 tallyCount--;
                 if (tallyCount <= 0) {
                     next(tallies);

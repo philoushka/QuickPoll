@@ -30,7 +30,7 @@ block content
             td(class="tallyActionImgs")
                 a(href="/tally/edit/" + tally.id)
                     i(class="fa fa-pencil-square-o fa-2x")
-                form(method="post",action="delete/"+ tally.id + "/" + tally.deleteToken,class="cellActionImg")
-                  a(href="#",class="delTally")
-                    i(class="fa fa-trash-o fa-2x deleteTally")
+                //-form(method="post",action="delete/"+ tally.id + "/" + tally.deleteToken,class="cellActionImg")
+                a(href=tally.id + "|" + tally.deleteToken,class="delTally")
+                  i(class="fa fa-trash-o fa-2x")
     - }

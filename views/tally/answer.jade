@@ -3,7 +3,7 @@ block head
     script(src="/scripts/answer.js")
 block content 
     p=ownerName + " asks:"
-    h2
+    h2(id="question")
         a(href="")=question             
     div.pollDesc=desc
     div.pollDesc=createdDateString

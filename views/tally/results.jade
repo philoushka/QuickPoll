@@ -6,9 +6,9 @@ block content
         a(href="")=tally.question               
         div(class="well bs-component")          
             fieldset      
-                if(tally.answers) {                          
-                    each answer in tally.answers
-                        p Hi, answer here ready to be written out.
-                } else 
-                p No Answers Yet.
+                if(tally.answers)                                            
+                  each answer in tally.answers
+                    p Hi, answer here ready to be written out.
+                else
+                  p No Answers Yet.
                 

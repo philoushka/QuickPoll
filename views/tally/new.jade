@@ -11,11 +11,11 @@ block content
                 div.form-group
                    label(for="pollOwnerName",class="col-lg-2 control-label") Who Are You?
                    div.col-lg-10
-                        input(type="text",class="form-control",placeholder="Your Name", id="pollOwnerName", name="pollOwnerName" )                        
+                        input(type="text",class="form-control required",placeholder="Your Name", id="pollOwnerName", name="pollOwnerName" )                        
                 div.form-group
                    label(for="pollQuestion",class="col-lg-2 control-label") Poll Question:
                    div.col-lg-10
-                        input(type="text",class="form-control",placeholder="What's your question?", id="pollQuestion", name="pollQuestion" )
+                        input(type="text",class="form-control required",placeholder="What's your question?", id="pollQuestion", name="pollQuestion" )
                 div.form-group   
                    label(for="pollDesc",class="col-lg-2 control-label") Brief Description:
                    div.col-lg-10
@@ -38,7 +38,7 @@ block content
                 div.form-group
                    label(for="notification",class="col-lg-2 control-label") Notify Me:
                    div.col-lg-10
-                        input(type="text",class="form-control",placeholder="Phone number for SMS or email address", id="notification", name="notification" )
+                        input(type="text",class="form-control",placeholder="Optional. Phone number for SMS or email address", id="notification", name="notification" )
                         div#notificationMsg
                 div.form-group
                  div(class="col-lg-10 col-lg-offset-2")

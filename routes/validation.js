@@ -6,7 +6,8 @@ exports.isDecentlyFormedEmailAddress = function(input) {
 //is a number ignoring the potential + country code prefix.
 exports.isDecentlyFormedSmsNumber = function(input) {
   if (input) {
-    input = input.replace(/\D/g, '');
+    console.log("cleaning " + input + " to " + input.replace(/\D/g, '') + " and checking for is numeric");
+    input = input.replace(/\D/g, '');    
     return (isNumeric(input));
   }
   return false;
@@ -15,3 +16,16 @@ exports.isDecentlyFormedSmsNumber = function(input) {
 function isNumeric(num) {
     return !isNaN(num)
 }
+
+exports.cleanNotification=function(input) {
+  if (!input) {
+    return "";
+  }
+  if (exports.isDecentlyFormedSmsNumber(input)) {
+    return input.replace(/\D/g, '');
+  }
+  else {
+    return input.trim();
+  }
+}
+

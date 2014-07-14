@@ -1,15 +1,16 @@
 $(function() {
 
     $('#formNew').on('submit', function(e) {
-        $("#formNew input:text").map(function() {
-            if (MarkIfInvalid($(this)) == false) {
+        //$("#formNew input:text").map(function() {
+        $(".required").map(function() {
+            if (markIfInvalid($(this)) == false) {
                 $('#errWarnBox').show();
                 e.preventDefault();
             }
         });
     });
-    $('#formAnswer input:text').blur(function() {
-        MarkIfInvalid($(this));
+    $('.required').blur(function() {
+        markIfInvalid($(this));
     });
         
      $('#notification').blur(function() {
@@ -22,7 +23,7 @@ $(function() {
         {
           notificationMsg= "US/Canada phone number."
         }
-        else
+        else if (input.length>0)
         {          
           notificationMsg = "Appears to be a non-US number. Please ensure that the number is complete with its country code."
         }
@@ -30,7 +31,7 @@ $(function() {
     });
     
     
-    function MarkIfInvalid(input) {
+    function markIfInvalid(input) {
         if (!input.val()) {
             input.parent('div').addClass('has-error');
             return false;
