@@ -57,7 +57,6 @@ exports.appendAnswerToTally = function(tallyId, userResponse, callback) {
             var tallyId = fileNames.getIDFromFileName(tallyListEntry.name);
             exports.getTally(tallyId, function(tally) {
                 
-               
                 if(tally)
                 {
                     tally.numResponses =0;

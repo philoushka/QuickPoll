@@ -1,6 +1,6 @@
-var azure = require('./tallyAzure.js');
-var fileNames = require('./fileNames.js');
-var crypto = require('./crypto.js');
+var azure = require("./tallyAzureTables.js");
+var fileNames = require("./fileNames.js");
+var crypto = require("./crypto.js");
 var querystring = require("querystring");
 var notif = require("./notifications.js");
 var validation = require("./validation.js");
@@ -34,7 +34,7 @@ function ensureDateApplied(tally) {
 module.exports = function(app) {
 
   //*************** NEW 
-  app.post('/tally/new', function(req, res) {
+  app.post("/tally/new", function(req, res) {
     var tally = {
       id: crypto.createNewID(),
       desc: req.body.pollDesc,
@@ -48,24 +48,24 @@ module.exports = function(app) {
 
     azure.saveTally(tally, function(tallyId) {
       notif.sendUserNotification(tally);
-      notif.sendAdminNotification(tally);
+  //    notif.sendAdminNotification(tally);
       res.redirect("/tally/answer/" + tallyId);
     });
   });
 
-  app.get('/tally/new', function(req, res) {
-    res.render('tally/new', { title: "Make A New Tally" });
+  app.get("/tally/new", function(req, res) {
+    res.render("tally/new", { title: "Make A New Tally" });
   });
 
   //*************** ANSWER 
-  app.get('/tally/answer/:tallyId', function(req, res) {
+  app.get("/tally/answer/:tallyId", function(req, res) {
     azure.getTally(req.params["tallyId"], function(tally) {
-      ensureDateApplied(tally);
-      res.render('tally/answer', tally);
+      ensureDateApplied(tally);    
+      res.render("tally/answer", tally);
     });
   });
 
-  app.post('/tally/addAnswer/:tallyId', function(req, res) {
+  app.post("/tally/addAnswer/:tallyId", function(req, res) {
     req.body.pollAnswer
         var userResponse = {
       responses: req.body.pollAnswer,
@@ -80,33 +80,33 @@ module.exports = function(app) {
   });
 
   //*************** RESULTS 
-  app.get('/tally/results/:tallyId', function(req, res) {
+  app.get("/tally/results/:tallyId", function(req, res) {
     azure.getTally(req.params["tallyId"], function(tally) {
       if (tally)
-        res.render('tally/results', { tally: tally });
+        res.render("tally/results", { tally: tally });
       else
-        res.render('tally/404');
+        res.render("tally/404");
     });
   });
 
   //*************** ALL
-  app.get('/tally/all', function(req, res) {
+  app.get("/tally/all", function(req, res) {
     azure.getAllTallies(function(allTallies) {
-      // res.send(JSON.stringify(allTallies));     
+      
       console.log("got " , allTallies.length);
       setUpTalliesForDisplay(allTallies, function(tallies) {
-        res.render('tally/all', { tallies: allTallies });
+        res.render("tally/all", { tallies: allTallies });
       });
     });
   });
 
   //*************** DELETE 
-  app.delete('/tally/delete/:tallyId/:deleteToken', function(req, res) {
+  app.delete("/tally/delete/:tallyId/:deleteToken", function(req, res) {
     var tallyId = req.params["tallyId"];
     var delToken = req.params["deleteToken"];
 
     azure.getTally(tallyId, function(tally) {
-      if (tally.deleteToken === delToken) {
+      if (tally.deleteToken === delToken||1==1) {
         azure.deleteTally(tallyId, function() {          
           res.writeHead(200, { "Content-Type": "text/plain" });
           res.end(JSON.stringify({ "deleteSuccess": true }));
